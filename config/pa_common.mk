@@ -13,49 +13,28 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     vendor/pa/prebuilt/common/etc/init.d/90userinit:system/etc/init.d/90userinit
 
-# Libs
-PRODUCT_COPY_FILES += \
-    vendor/pa/prebuilt/common/lib/libjni_latinime.so:system/lib/libjni_latinime.so
-
 # Backup Tool
 PRODUCT_COPY_FILES += \
     vendor/pa/prebuilt/common/bin/backuptool.sh:system/bin/backuptool.sh \
     vendor/pa/prebuilt/common/bin/backuptool.functions:system/bin/backuptool.functions \
     vendor/pa/prebuilt/common/bin/50-backupScript.sh:system/addon.d/50-backupScript.sh
 
-# Bring in camera effects
-PRODUCT_COPY_FILES +=  \
-    vendor/pa/prebuilt/common/media/LMprec_508.emd:system/media/LMprec_508.emd \
-    vendor/pa/prebuilt/common/media/PFFprec_600.emd:system/media/PFFprec_600.emd
-
-# Bring in all video files
-$(call inherit-product, frameworks/base/data/videos/VideoPackage2.mk)
-
 # Exclude prebuilt paprefs from builds if the flag is set
-ifneq ($(PREFS_FROM_SOURCE),true)
-    PRODUCT_COPY_FILES += \
-        vendor/pa/prebuilt/common/apk/ParanoidPreferences.apk:system/app/ParanoidPreferences.apk
-else
-    # Build paprefs from sources
-    PRODUCT_PACKAGES += \
-        ParanoidPreferences
-endif
+PRODUCT_COPY_FILES += \
+    vendor/pa/prebuilt/common/apk/ParanoidPreferences.apk:system/app/ParanoidPreferences.apk
 
-#PRODUCT_PACKAGES += \
-#    OTAPlatform
+# Bootanimation
+PRODUCT_COPY_FILES += \
+    vendor/pa/prebuilt/common/bootanimation/MDPI.zip:system/media/bootanimation.zip
 
-ifneq ($(PARANOID_BOOTANIMATION_NAME),)
-    PRODUCT_COPY_FILES += \
-        vendor/pa/prebuilt/common/bootanimation/$(PARANOID_BOOTANIMATION_NAME).zip:system/media/bootanimation.zip
-else
-    PRODUCT_COPY_FILES += \
-        vendor/pa/prebuilt/common/bootanimation/XHDPI.zip:system/media/bootanimation.zip
-endif
+# ParanoidAndroid common packages
+PRODUCT_PACKAGES += \
+    ParanoidWallpapers
 
 # T-Mobile theme engine
 include vendor/pa/config/themes_common.mk
 
-# embed superuser into settings 
+# Embed superuser into settings 
 SUPERUSER_EMBEDDED := true
 
 # device common prebuilts
@@ -104,17 +83,4 @@ PRODUCT_PROPERTY_OVERRIDES += \
   ro.pa.version=$(VERSION) \
   ro.papref.revision=$(PA_PREF_REVISION)
 
-# goo.im properties
-ifneq ($(DEVELOPER_VERSION),true)
-    PRODUCT_PROPERTY_OVERRIDES += \
-      ro.goo.developerid=paranoidandroid \
-      ro.goo.rom=paranoidandroid \
-      ro.goo.version=$(shell date +%s)
-endif
-
-# OTAPlatform properties
-#PRODUCT_PROPERTY_OVERRIDES += \
-#  ro_otaplatform.changelog_url=https://plus.google.com/app/basic/107979589566958860409/posts \
-#  ro_otaplatform.gapps_url=http://goo.im/devs/paranoidandroid/roms/gapps \
-#  ro_otaplatform.gapps_version=ro.addon.pa_version \
-#  ro_otaplatform.backup_files=/system/etc/paranoid/properties.conf
+endif   
